@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PromptoShorts™ — De 1 video a 7–20 Shorts listos para Premiere</title>
+  <meta name="description" content="De 1 video largo a 7–20 Shorts listos para Premiere. Pegás tu transcripción y PromptoShorts te devuelve cortes listos para importar.">
+  <style>
+    :root{
+      --bg-1:#0e0c1a;
+      --bg-2:#14122b;
+      --bg-3:#0f0c20;
+      --card: #12121a;
+      --muted: #a9afc3;
+      --txt: #f4f6fb;
+      --acc: #7c5cff;
+      --acc2: #4dd4ac;
+      --shadow: 0 10px 28px rgba(0,0,0,.35);
+      --radius: 16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color: var(--txt);
+      line-height: 1.6;
+      position: relative;
+      overflow-x: hidden;
+      background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 55%, var(--bg-3) 100%) fixed;
+      background-attachment: fixed;
+    }
+    body::before{
+      content:"";
+      position:fixed; inset:-10vh -10vw;
+      pointer-events:none; z-index:-1;
+      background-image:
+        radial-gradient(1500px 600px at 80% -10%, rgba(255,255,255,.04), transparent 60%),
+        radial-gradient(1200px 500px at -10% 100%, rgba(255,255,255,.03), transparent 60%),
+        repeating-linear-gradient(45deg, rgba(255,255,255,.015) 0 2px, transparent 2px 4px);
+      mix-blend-mode: overlay;
+      opacity:.55;
+      filter: saturate(.9) contrast(1.02);
+    }
+    a{color: var(--acc)}
+    .wrap{max-width:1120px;margin:0 auto;padding:28px}
+    header{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:16px;margin-bottom:16px;
+    }
+    .logo{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.2px}
+    .logo-badge{
+      width:36px;height:36px;border-radius:10px;background: linear-gradient(135deg, var(--acc), #b99aff);
+      display:grid;place-items:center;box-shadow: var(--shadow); font-weight:900;color:#0d0322;
+    }
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      padding:14px 18px;border-radius:14px;border:1px solid transparent;
+      font-weight:700;text-decoration:none;transition:.2s ease;cursor:pointer;
+    }
+    .btn-primary{ background: linear-gradient(135deg, var(--acc), #9a85ff); color:#0e0626; }
+    .btn-primary:hover{ transform: translateY(-1px); box-shadow: var(--shadow); }
+    .btn-ghost{ background: transparent; color: var(--txt); border-color: rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.18) }
+
+    .hero{
+      display:grid;grid-template-columns: 1.2fr 1fr;gap:28px;align-items:center;
+      padding:28px;margin-top:6px;
+      background: rgba(5,6,14,.22); border:1px solid rgba(255,255,255,.08); border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 980px){
+      .hero{ grid-template-columns: 1fr; }
+    }
+    h1{font-size: clamp(28px, 5vw, 44px);line-height:1.12;margin:10px 0 8px}
+    h2{font-size: clamp(22px, 3.5vw, 30px);margin:10px 0 6px}
+    p.lead{font-size: clamp(16px, 2.4vw, 18px); color: var(--muted)}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+    .card{background: rgba(10,12,24,.65); border:1px solid rgba(255,255,255,.08); border-radius: var(--radius); padding:18px; box-shadow: var(--shadow);}
+    .vsl{display:grid;gap:10px}
+    .vsl .label{font-size:12px;color:#ffc772;background:rgba(255,199,114,.12);border:1px solid rgba(255,199,114,.4);padding:6px 10px;border-radius:12px;display:inline-block;font-weight:700;letter-spacing:.2px}
+    .vsl iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;background:#0d0d14}
+    .section{margin:34px 0}
+    .muted{color:var(--muted)}
+    .kpis{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
+    .kpi{background:rgba(77,212,172,.12);border:1px solid rgba(77,212,172,.35);padding:10px 14px;border-radius:12px;font-weight:800;color:#d7fff0}
+    .offer{display:grid;grid-template-columns: 1fr 1fr;gap:16px}
+    @media (max-width: 900px){ .offer{ grid-template-columns: 1fr; } }
+    .price{font-size:40px;font-weight:900}
+    footer{margin:40px 0 10px;color:var(--muted);font-size:13px;text-align:center}
+    .disclaimer{font-size:12px;color:var(--muted)}
+    .accordion{display:grid;gap:12px}
+    .acc-item{border:1px solid rgba(255,255,255,.1);border-radius:12px;background:rgba(255,255,255,.05);overflow:hidden}
+    .acc-head{padding:14px 16px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+    .acc-icon{transition:.2s ease}
+    .acc-body{max-height:0;overflow:hidden;transition:max-height .35s ease, padding .35s ease; padding:0 16px}
+    .acc-item.open .acc-body{max-height:320px;padding:12px 16px 16px}
+    .acc-item.open .acc-icon{transform: rotate(180deg)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">
+        <div class="logo-badge">PS</div>
+        <div>PromptoShorts<span style="opacity:.6">™</span></div>
+      </div>
+      <nav style="display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn btn-ghost" href="#como-funciona">Cómo funciona</a>
+        <a class="btn btn-ghost" href="#oferta">Oferta</a>
+        <a class="btn btn-primary" href="#checkout">Comprar por US$49</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div>
+        <h1>De 1 video largo a 7–20 Shorts listos para Premiere.</h1>
+        <p class="lead">Pegás tu transcripción. PromptoShorts analiza, elige los mejores momentos y te devuelve cortes listos para importar. Vos solo pulís y publicás.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#checkout">Comprar ahora — US$49 lifetime</a>
+          <a class="btn btn-ghost" href="#vsl">Ver video (2:30)</a>
+        </div>
+        <div class="kpis">
+          <div class="kpi">Ahorra 70–90% del tiempo</div>
+          <div class="kpi">Menos carga mental</div>
+          <div class="kpi">ROI: vendé clips a US$13</div>
+        </div>
+      </div>
+
+      <div class="card vsl" id="vsl" aria-label="Video explicativo del producto">
+        <span class="label">⚠️ Obligatorio ver para entender el producto</span>
+        <iframe
+          src="https://www.youtube.com/embed/JnvIBS8WHx8?rel=0&modestbranding=1&showinfo=0"
+          title="PromptoShorts — VSL"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin">
+        </iframe>
+        <small class="muted">2:30 min · Demo real con reloj en pantalla</small>
+      </div>
+    </section>
+
+    <section id="como-funciona" class="section">
+      <h2>Cómo funciona (3 pasos)</h2>
+      <div class="card" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+        <div>
+          <strong>1) Preparás el material</strong>
+          <p class="muted">Video largo (10–45 min) + transcripción o SRT.</p>
+        </div>
+        <div>
+          <strong>2) Ejecutás PromptoShorts™</strong>
+          <p class="muted">El pipeline puntúa ganchos, tensión y cierres y arma los cortes.</p>
+        </div>
+        <div>
+          <strong>3) Exportás e importás</strong>
+          <p class="muted">Sistema listo para exportación a <strong>Premiere</strong>. Ajustes finos y a publicar.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="oferta" class="section offer">
+      <div class="card">
+        <h2>Oferta — Acceso Lifetime</h2>
+        <div class="price">US$49</div>
+        <p class="muted">Incluye actualizaciones futuras + recursos adicionales.</p>
+        <ul style="list-style:none;padding:0;display:grid;gap:10px">
+          <li>PromptoShorts™ completo (todas las etapas)</li>
+          <li>Sistema listo para exportación a <strong>Premiere</strong></li>
+          <li>Guías, plantillas y ejemplos</li>
+          <li>Soporte por email (horario comercial)</li>
+        </ul>
+        <div class="hero-actions" id="checkout">
+          <a class="btn btn-primary" href="#">Comprar ahora — US$49</a>
+          <a class="btn btn-ghost" href="#faq">Preguntas frecuentes</a>
+        </div>
+        <p class="disclaimer">Hoy optimizado para Premiere. Próximamente: más plataformas.</p>
+        <small class="muted">Garantía 7 días: si no obtenés ≥10 clips publicables con tu primer video, reembolso 100% y te quedás con el sistema.</small>
+      </div>
+    </section>
+
+    <section id="faq" class="section">
+      <h2>Preguntas frecuentes</h2>
+      <div class="accordion" id="acc">
+        <div class="acc-item">
+          <div class="acc-head">¿Cuánto tarda en generar los cortes?<span class="acc-icon">▾</span></div>
+          <div class="acc-body"><p>El tiempo típico es 15 minutos o menos desde la transcripción hasta tener los cortes listos para importar. Luego hacés el pulido final en Premiere.</p></div>
+        </div>
+        <div class="acc-item">
+          <div class="acc-head">¿Necesito ser editor experto?<span class="acc-icon">▾</span></div>
+          <div class="acc-body"><p>No. El sistema reduce la selección y segmentación. Aun así, un toque manual mejora títulos, ritmo y subtítulos.</p></div>
+        </div>
+        <div class="acc-item">
+          <div class="acc-head">¿Funciona con otros editores?<span class="acc-icon">▾</span></div>
+          <div class="acc-body"><p>Hoy está optimizado para Premiere. Estamos evaluando ampliar compatibilidad.</p></div>
+        </div>
+        <div class="acc-item">
+          <div class="acc-head">¿Puedo usarlo para terceros?<span class="acc-icon">▾</span></div>
+          <div class="acc-body"><p>Sí. Muchos creadores venden el servicio de “clipeo” a US$13 por short como referencia.</p></div>
+        </div>
+        <div class="acc-item">
+          <div class="acc-head">¿Qué necesito para empezar?<span class="acc-icon">▾</span></div>
+          <div class="acc-body"><p>Un video de 10–45 minutos y su transcripción/SRT. Después seguís la guía rápida incluida.</p></div>
+        </div>
+        <div class="acc-item">
+          <div class="acc-head">¿Y los derechos de autor?<span class="acc-icon">▾</span></div>
+          <div class="acc-body"><p>Usá material propio o con permisos. El usuario es responsable del contenido que procesa y publica.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div>© <span id="y"></span> PromptoShorts™ · Todos los derechos reservados</div>
+      <div class="muted">Hecho con enfoque en simplicidad y resultados.</div>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+    const acc = document.getElementById('acc');
+    const items = Array.from(acc.querySelectorAll('.acc-item'));
+    items.forEach(item => {
+      item.querySelector('.acc-head').addEventListener('click', () => {
+        const isOpen = item.classList.contains('open');
+        items.forEach(i => i.classList.remove('open'));
+        if(!isOpen){ item.classList.add('open'); }
+      });
+    });
+  </script>
+</body>
+</html>
