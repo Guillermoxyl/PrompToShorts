@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PromptoShorts™ — De 1 video a 7–20 Shorts listos para Premiere</title>
+  <meta name="description" content="De 1 video largo a 7–20 Shorts listos para Premiere. Pegás tu transcripción y PromptoShorts te devuelve cortes listos para importar.">
+  <style>
+    :root{
+      --page-bg: #0d0d14;
+      --card: #12121a;
+      --muted: #a9afc3;
+      --txt: #f4f6fb;
+      --acc: #7c5cff;
+      --acc2: #4dd4ac;
+      --glow1: #8d7bff;
+      --glow2: #51e6c1;
+      --shadow: 0 10px 28px rgba(0,0,0,.35);
+      --radius: 16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      /* color de fondo uniforme definido arriba (sobrescrito por inline para degradado) */ background-color: var(--page-bg);
+      color: var(--txt);
+      line-height: 1.6;
+      position: relative;
+      overflow-x: hidden;
+    }
+    a{color: var(--acc)}
+    .wrap{max-width:1120px;margin:0 auto;padding:28px}
+    header{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:16px;margin-bottom:16px;
+    }
+    .logo{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.2px}
+    .logo-badge{
+      width:36px;height:36px;border-radius:10px;background: linear-gradient(135deg, var(--acc), #b99aff);
+      display:grid;place-items:center;box-shadow: var(--shadow); font-weight:900;color:#0d0322;
+    }
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 18px;border-radius:14px;border:1px solid transparent;font-weight:700;text-decoration:none;transition:.2s ease;cursor:pointer;}
+    .btn-primary{ background: linear-gradient(135deg, var(--acc), #9a85ff); color:#0e0626; }
+    .btn-primary:hover{ transform: translateY(-1px); box-shadow: var(--shadow); }
+    .btn-ghost{ background: transparent; color: var(--txt); border-color: rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.18) }
+
+    .pill{display:inline-flex;align-items:center;gap:8px;background:rgba(77,212,172,.14);color:#c9ffee;border:1px solid rgba(77,212,172,.4);padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800}
+    .pill .inf{font-weight:900;font-size:13px}
+    .hero{
+      display:grid;grid-template-columns: 1.2fr 1fr;gap:28px;align-items:center;
+      padding:28px;margin-top:6px;
+      background: rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.08); border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 980px){ .hero{ grid-template-columns: 1fr; } }
+    h1{font-size: clamp(28px, 5vw, 44px);line-height:1.12;margin:10px 0 8px}
+    h2{font-size: clamp(22px, 3.5vw, 30px);margin:10px 0 6px}
+    p.lead{font-size: clamp(16px, 2.4vw, 18px); color: var(--muted)}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+    .card{background: var(--card); border:1px solid rgba(255,255,255,.08); border-radius: var(--radius); padding:18px; box-shadow: var(--shadow);}
+    .vsl{display:grid;gap:10px}
+    .vsl .label{font-size:12px;color:#ffc772;background:rgba(255,199,114,.12);border:1px solid rgba(255,199,114,.4);padding:6px 10px;border-radius:12px;display:inline-block;font-weight:700;letter-spacing:.2px}
+    .vsl iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;background:#0d0d14}
+    .section{margin:34px 0}
+    .muted{color:var(--muted)}
+    .kpis{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
+    .kpi{background:rgba(77,212,172,.12);border:1px solid rgba(77,212,172,.35);padding:10px 14px;border-radius:12px;font-weight:800;color:#d7fff0}
+    .offer{display:grid;grid-template-columns: 1fr 1fr;gap:16px}
+    @media (max-width: 900px){ .offer{ grid-template-columns: 1fr; } }
+    .price{font-size:40px;font-weight:900}
+    footer{margin:40px 0 10px;color:var(--muted);font-size:13px;text-align:center}
+    .disclaimer{font-size:12px;color:var(--muted)}
+
+    /* Burbujas de pasos */
+    .bubbles{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    @media (max-width: 900px){ .bubbles{grid-template-columns:1fr} }
+    .bubble{
+      position:relative; isolation:isolate;
+      border-radius:22px; padding:20px 18px;
+      background: rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      overflow:hidden;
+      transform: translateZ(0);
+      animation: float 6s ease-in-out infinite;
+    }
+    .bubble:nth-child(2){ animation-duration: 7s }
+    .bubble:nth-child(3){ animation-duration: 8s }
+    .bubble::before{
+      content:""; position:absolute; inset:-40% -20% auto auto; height:160%; width:65%;
+      background: radial-gradient(60% 60% at 50% 50%, var(--glow1), transparent 60%);
+      filter: blur(40px); opacity:.35; z-index:-1; transform: rotate(12deg);
+      animation: glow 4.5s ease-in-out infinite alternate;
+    }
+    .bubble::after{
+      content:""; position:absolute; inset:auto -30% -40% auto; height:150%; width:70%;
+      background: radial-gradient(55% 55% at 60% 50%, var(--glow2), transparent 60%);
+      filter: blur(38px); opacity:.28; z-index:-1; transform: rotate(-8deg);
+      animation: glow 5.2s ease-in-out infinite alternate;
+    }
+    .bubble:hover{ box-shadow: 0 12px 36px rgba(124,92,255,.25); transform: translateY(-2px) }
+    .step-num{font-weight:900;font-size:12px;letter-spacing:.6px;opacity:.8}
+    .step-title{font-size:18px;font-weight:800;margin:6px 0 4px}
+    .step-desc{font-size:14px;color:var(--muted)}
+    @keyframes float{0%,100%{transform: translateY(0)}50%{transform: translateY(-6px)}}
+    @keyframes glow{from{opacity:.2}to{opacity:.45}}
+
+    /* Accordion FAQ */
+    .accordion{display:grid;gap:12px}
+    .acc-item{border:1px solid rgba(255,255,255,.1);border-radius:12px;background:rgba(255,255,255,.03);overflow:hidden}
+    .acc-head{padding:14px 16px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+    .acc-icon{transition:.2s ease}
+    .acc-body{max-height:0;overflow:hidden;transition:max-height .35s ease, padding .35s ease; padding:0 16px}
+    .acc-item.open .acc-body{max-height:320px;padding:12px 16px 16px}
+    .acc-item.open .acc-icon{transform: rotate(180deg)}
+  </style>
+
+<style id="offer-enhancements">
+  /* Center the offer block and constrain width */
+  .offer, .offer .wrap { display: grid; place-items: center; }
+  .offer .card, .offer .panel, .offer .price-box, .offer .box, .offer .container, .offer .content {
+    max-width: 760px; width: 100%; margin: 0 auto;
+  }
+
+  /* Price compare (red, smaller, formal) */
+  .price-compare { font-size: 0.82em; color: #d9363e; font-weight: 500; margin-left: .4rem; vertical-align: middle; }
+  .price-compare s { text-decoration-thickness: 1px; opacity: .92; }
+
+  /* Tooltip */
+  .has-tip { position: relative; cursor: help; }
+  .has-tip .tip {
+    position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%);
+    background: rgba(15,15,20,.98); color: #fff; padding: 6px 8px; border-radius: 8px;
+    font-size: 12px; line-height: 1.3; white-space: nowrap; opacity: 0; pointer-events: none;
+    box-shadow: 0 6px 18px rgba(0,0,0,.35);
+    transition: opacity .18s ease-in-out;
+  }
+  .has-tip .tip::after {
+    content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+    border: 6px solid transparent; border-top-color: rgba(15,15,20,.98);
+  }
+  .has-tip:hover .tip { opacity: 1; }
+
+  /* Hover illumination for the offer card (subtle, professional) */
+  .offer .card, .offer .panel, .offer .price-box, .offer .box {
+    transition: box-shadow .25s ease, background-color .25s ease, border-color .25s ease;
+  }
+  .offer:hover .card, .offer:hover .panel, .offer:hover .price-box, .offer:hover .box {
+    box-shadow: 0 16px 44px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06) inset;
+  }
+
+  /* Sequential highlight of promises/benefits inside the offer */
+  .offer ul li { position: relative; }
+  .offer:hover ul li {
+    animation: offerHighlight .75s ease-out forwards;
+  }
+  .offer:hover ul li:nth-child(1) { animation-delay: .00s; }
+  .offer:hover ul li:nth-child(2) { animation-delay: .08s; }
+  .offer:hover ul li:nth-child(3) { animation-delay: .16s; }
+  .offer:hover ul li:nth-child(4) { animation-delay: .24s; }
+  .offer:hover ul li:nth-child(5) { animation-delay: .32s; }
+  @keyframes offerHighlight {
+    0% { background-color: transparent; }
+    40% { background-color: rgba(255,255,255,.04); }
+    100% { background-color: transparent; }
+  }
+
+  /* Respect users who prefer reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .offer:hover ul li { animation: none !important; }
+    .offer .card, .offer .panel, .offer .price-box, .offer .box { transition: none !important; }
+    .has-tip .tip { transition: none !important; }
+  }
+</style>
+
+
+<style id="offer-focus-css">
+  /* Center the Lifetime offer block */
+  .offer .offer-focus {
+    display: grid;
+    place-items: center;
+    margin-left: auto; margin-right: auto;
+    width: 100%;
+  }
+  .offer .offer-focus > * {
+    width: 100%;
+    max-width: 760px;
+    margin-left: auto; margin-right: auto;
+  }
+
+  /* Subtle, professional hover illumination ONLY on the offer block */
+  .offer .offer-focus {
+    transition: box-shadow .25s ease, outline-color .25s ease, background-color .25s ease;
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+  }
+  .offer .offer-focus:hover {
+    box-shadow: 0 18px 48px rgba(0,0,0,.35);
+    outline: 1px solid rgba(255,255,255,.06);
+    outline-offset: 0;
+  }
+
+  /* Sequential highlight for the promises within the offer list */
+  .offer .offer-focus ul li { position: relative; }
+  .offer .offer-focus:hover ul li { animation: offerSeq .7s ease-out forwards; }
+  .offer .offer-focus:hover ul li:nth-child(1) { animation-delay: 0s; }
+  .offer .offer-focus:hover ul li:nth-child(2) { animation-delay: .08s; }
+  .offer .offer-focus:hover ul li:nth-child(3) { animation-delay: .16s; }
+  .offer .offer-focus:hover ul li:nth-child(4) { animation-delay: .24s; }
+  .offer .offer-focus:hover ul li:nth-child(5) { animation-delay: .32s; }
+  @keyframes offerSeq {
+    0% { background-color: transparent; }
+    40% { background-color: rgba(255,255,255,.05); }
+    100% { background-color: transparent; }
+  }
+
+  /* Make the red strikethrough smaller/more formal (already present) */
+  .offer .price-compare { font-size: .82em; color: #d9363e; font-weight: 500; }
+  .offer .price-compare s { text-decoration-thickness: 1px; opacity: .92; }
+
+  /* Tooltip UX already added; keep it here to scope */
+  .offer .has-tip { position: relative; cursor: help; }
+  .offer .has-tip .tip {
+    position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%);
+    background: rgba(15,15,20,.98); color: #fff; padding: 6px 8px; border-radius: 8px;
+    font-size: 12px; line-height: 1.3; white-space: nowrap; opacity: 0; pointer-events: none;
+    box-shadow: 0 6px 18px rgba(0,0,0,.35);
+    transition: opacity .18s ease-in-out;
+  }
+  .offer .has-tip:hover .tip { opacity: 1; }
+  .offer .has-tip .tip::after {
+    content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+    border: 6px solid transparent; border-top-color: rgba(15,15,20,.98);
+  }
+
+  /* Respect prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .offer .offer-focus:hover ul li { animation: none !important; }
+    .offer .offer-focus, .offer .has-tip .tip { transition: none !important; }
+  }
+</style>
+
+
+<style id="offer-shimmer-css">
+  /* Shimmer overlay only on the offer focus block */
+  .offer .offer-focus {
+    position: relative;
+    overflow: hidden;
+  }
+  .offer .offer-focus::after {
+    content: "";
+    position: absolute; top: 0; left: -150%;
+    width: 150%; height: 100%;
+    background: linear-gradient(110deg,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,0.06) 25%,
+      rgba(255,255,255,0.12) 50%,
+      rgba(255,255,255,0.06) 75%,
+      rgba(255,255,255,0) 100%);
+    transform: translateX(0);
+    animation: offerShine 2.8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes offerShine {
+    0% { transform: translateX(-120%); }
+    50% { transform: translateX(0%); }
+    100% { transform: translateX(120%); }
+  }
+  /* Reduce motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .offer .offer-focus::after { animation: none; opacity: 0; }
+  }
+</style>
+
+
+<style id="offer-spotlight-strong">
+  /* Hard center the offer and constrain width */
+  .offer { display: flex; justify-content: center; }
+  .offer .offer-spotlight {
+    position: relative;
+    display: grid; place-items: center;
+    width: 100%;
+    max-width: 880px;
+    margin: clamp(8px, 3vw, 24px) auto;
+    padding: clamp(18px, 3.5vw, 32px);
+    border-radius: 24px;
+    background: rgba(255,255,255,0.02);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.06) inset,
+      0 28px 90px rgba(0,0,0,.6);
+    z-index: 5;
+    overflow: hidden;
+    transition: transform .28s ease, box-shadow .28s ease;
+  }
+  /* Strong "spotlight" attention */
+  .offer .offer-spotlight::before {
+    content: "";
+    position: absolute; top: -120%; left: -110%;
+    width: 240%; height: 380%;
+    background: radial-gradient(40% 30% at 20% 20%,
+      rgba(255,255,255,.45),
+      rgba(255,255,255,.08) 45%,
+      rgba(0,0,0,0) 60%);
+    filter: blur(18px);
+    transform: rotate(10deg);
+    animation: offerScan 4.2s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes offerScan {
+    0% { transform: translateX(-25%) rotate(10deg); }
+    50% { transform: translateX(15%) rotate(10deg); }
+    100% { transform: translateX(55%) rotate(10deg); }
+  }
+  /* Animated glowing border */
+  .offer .offer-spotlight::after {
+    content: "";
+    position: absolute; inset: -2px; border-radius: 26px;
+    background:
+      conic-gradient(from 0deg,
+        rgba(255,255,255,.55),
+        rgba(255,255,255,0) 22%,
+        rgba(255,255,255,.55) 44%,
+        rgba(255,255,255,0) 66%,
+        rgba(255,255,255,.55) 88%);
+    filter: blur(18px);
+    opacity: .65;
+    animation: offerPulse 2.6s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes offerPulse {
+    0%,100% { opacity:.45; filter: blur(12px); }
+    50% { opacity:.8; filter: blur(22px); }
+  }
+  /* Slight focus scale on hover/interaction (desktop) */
+  .offer .offer-spotlight:hover { transform: scale(1.02); }
+
+  /* Sequential highlight of list items inside the offer */
+  .offer .offer-spotlight ul li { position: relative; }
+  .offer .offer-spotlight:hover ul li { animation: offerSeq 0.7s ease-out forwards; }
+  .offer .offer-spotlight:hover ul li:nth-child(1){ animation-delay: .00s; }
+  .offer .offer-spotlight:hover ul li:nth-child(2){ animation-delay: .08s; }
+  .offer .offer-spotlight:hover ul li:nth-child(3){ animation-delay: .16s; }
+  .offer .offer-spotlight:hover ul li:nth-child(4){ animation-delay: .24s; }
+  .offer .offer-spotlight:hover ul li:nth-child(5){ animation-delay: .32s; }
+  @keyframes offerSeq {
+    0% { background-color: transparent; }
+    40% { background-color: rgba(255,255,255,.08); }
+    100% { background-color: transparent; }
+  }
+
+  /* Make sure the main price and CTA stand out */
+  .offer .offer-spotlight .price { font-size: clamp(38px, 6.8vw, 56px); line-height: 1.05; }
+  .offer .offer-spotlight .btn { min-height: 52px; padding: 14px 18px; font-weight: 600; }
+
+  /* Mobile-first improvements */
+  @media (max-width: 560px) {
+    .offer { padding-left: 12px; padding-right: 12px; }
+    .offer .offer-spotlight { max-width: 100%; padding: 16px; border-radius: 18px; }
+    .offer .offer-spotlight .btn { width: 100%; min-height: 56px; font-size: 18px; }
+    .offer .offer-spotlight .price { font-size: clamp(36px, 10vw, 44px); }
+    .offer .price-compare { font-size: .78em; }
+  }
+
+  /* Respect reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .offer .offer-spotlight, .offer .offer-spotlight::before, .offer .offer-spotlight::after {
+      animation: none !important; transform: none !important;
+    }
+  }
+</style>
+
+
+<style id="brand-and-offer-bullets">
+  :root { --mini-logo-size: 28px; }
+  /* Mini logo near hero/brand */
+  .mini-logo {
+    width: var(--mini-logo-size);
+    height: var(--mini-logo-size);
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 8px;
+    border-radius: 8px;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.08) inset;
+  }
+  /* Corner logo on Offer */
+  .offer .offer-spotlight .offer-corner-logo {
+    position: absolute; top: 10px; right: 10px;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(255,255,255,.04);
+    outline: 1px solid rgba(255,255,255,.08);
+    transition: transform .2s ease, box-shadow .2s ease, outline-color .2s ease;
+    z-index: 10;
+  }
+  .offer .offer-spotlight .offer-corner-logo img {
+    width: 28px; height: 28px; border-radius: 6px;
+    pointer-events: none;
+  }
+  .offer .offer-spotlight .offer-corner-logo:hover {
+    transform: translateY(-1px) scale(1.06) rotate(2deg);
+    box-shadow: 0 10px 26px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.12) inset;
+    outline-color: rgba(255,255,255,.22);
+  }
+  /* Pill bullets with periodic glow inside the Offer list */
+  .offer .offer-spotlight ul li {
+    list-style: none;
+    padding: 8px 12px;
+    margin: 6px 0;
+    border-radius: 999px;
+    background: rgba(255,255,255,.03);
+    position: relative;
+    overflow: hidden;
+  }
+  .offer .offer-spotlight ul li::after {
+    content: "";
+    position: absolute; top: 0; left: -120%;
+    width: 120%; height: 100%;
+    background: linear-gradient(110deg,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,.10) 45%,
+      rgba(255,255,255,0) 100%);
+    animation: pillGlow 6s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .offer .offer-spotlight ul li:nth-child(2)::after { animation-delay: 1s; }
+  .offer .offer-spotlight ul li:nth-child(3)::after { animation-delay: 2s; }
+  .offer .offer-spotlight ul li:nth-child(4)::after { animation-delay: 3s; }
+  .offer .offer-spotlight ul li:nth-child(5)::after { animation-delay: 4s; }
+  @keyframes pillGlow {
+    0%, 70% { transform: translateX(-120%); opacity: 0; }
+    75% { opacity: .8; }
+    85% { transform: translateX(20%); opacity: 0; }
+    100% { transform: translateX(20%); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .offer .offer-spotlight ul li::after { animation: none !important; opacity: 0; }
+    .offer .offer-spotlight .offer-corner-logo { transition: none !important; }
+  }
+</style>
+
+</head>
+<body style="background: linear-gradient(180deg, #0e0c1a 0%, #14122b 55%, #0f0c20 100%) fixed; background-attachment: fixed;">
+  <div class="wrap">
+    <header>
+      <div class="logo">
+        <div class="logo-badge">PS</div>
+        <div>PromptoShorts<span style="opacity:.6">™</span></div>
+      </div>
+      <nav style="display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn btn-ghost" href="#como-funciona">Cómo funciona</a>
+        <a class="btn btn-ghost" href="#oferta">Oferta</a>
+        <a class="btn btn-primary" href="https://eqstore.craftingstore.net/category/506230">Comprar por US$49</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div>
+        <span class="pill" title="Acceso de por vida, sin suscripción"><span class="inf">∞</span> Acceso Lifetime · sin suscripción</span>
+        <h1>De 1 video largo a 7–20 Shorts listos para Premiere.</h1>
+        <p class="lead">Pegás tu transcripción. PromptoShorts analiza, elige los mejores momentos y te devuelve cortes listos para importar. Vos solo pulís y publicás.</p>
+<div class="hero-proof" style="margin-top:8px; font-size:14px;">
+  <strong>10M+ vistas</strong> • <strong>900 ventas</strong> • Multiplataforma (YouTube, TikTok, Instagram)
+</div>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://eqstore.craftingstore.net/category/506230">Comprar ahora — US$49 lifetime</a>
+          <a class="btn btn-ghost" href="#vsl">Ver video (2:30)</a>
+        </div>
+        <div class="kpis">
+          <div class="kpi">Ahorra 70–90% del tiempo</div>
+          <div class="kpi">Menos carga mental</div>
+          <div class="kpi">ROI: vendé clips a US$13</div>
+        </div>
+      </div>
+      <div class="card vsl" id="vsl" aria-label="Video explicativo del producto">
+        <span class="label">⚠️ Obligatorio ver para entender el producto</span>
+        <iframe
+          src="https://www.youtube.com/embed/JnvIBS8WHx8?rel=0&modestbranding=1&showinfo=0"
+          title="PromptoShorts — VSL"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin">
+        </iframe>
+        <small class="muted">2:30 min · Demo real con reloj en pantalla</small>
+      </div>
+    </section>
+
+    <section id="como-funciona" class="section">
+      <h2>Cómo funciona</h2>
+      <div class="bubbles" role="list">
+        <div class="bubble" role="listitem">
+          <div class="step-num">PASO 1</div>
+          <div class="step-title">Preparás el material</div>
+          <div class="step-desc">Video largo (10–45 min) + transcripción o SRT.</div>
+        </div>
+        <div class="bubble" role="listitem">
+          <div class="step-num">PASO 2</div>
+          <div class="step-title">Ejecutás PromptoShorts™</div>
+          <div class="step-desc">El pipeline puntúa ganchos, tensión y cierres y arma los cortes.</div>
+        </div>
+        <div class="bubble" role="listitem">
+          <div class="step-num">PASO 3</div>
+          <div class="step-title">Exportás e importás</div>
+          <div class="step-desc">Sistema listo para exportación a <strong>Premiere</strong>. Ajustes finos y a publicar.</div>
+        </div>
+      </div>
+    </section>
+<section class="section benefits">
+  <div class="wrap">
+    <h2>Beneficios (resultado, no proceso)</h2>
+    <ul class="benefits-list">
+      <li>De 60 min viendo → ≤15 min para exportar clips listos (por video de 1 h)</li>
+      <li>20–30 shorts por cada video de 60 min</li>
+      <li>Publicás 3–5× más y encontrás formatos ganadores más rápido</li>
+      <li>Multiplataforma: YouTube Shorts, TikTok e Instagram</li>
+    </ul>
+  </div>
+</section>
+
+
+    <section id="oferta" class="section offer">
+      <div class="card">
+        <h2>Oferta — Acceso Lifetime</h2>
+        <div class="price">US$49 <span class="price-compare has-tip" style="color:#ff4d4f;"><s>US$260</s><span class="tip">≈ costo de 20 shorts a US$13/short</span></span></div>
+        <p class="muted">Incluye actualizaciones futuras + recursos adicionales.</p>
+        <ul style="list-style:none;padding:0;display:grid;gap:10px">
+          <li><strong>Acceso de por vida</strong> — <em>sin suscripción</em></li>
+          <li>PromptoShorts™ completo (todas las etapas)</li>
+          <li>Sistema listo para exportación a <strong>Premiere</strong></li>
+          <li>Guías, plantillas y ejemplos</li>
+          <li>Soporte por Discord y email</li>
+        </ul>
+        <div class="hero-actions" id="checkout">
+          <a class="btn btn-primary" href="https://eqstore.craftingstore.net/category/506230">Comprar ahora — US$49</a>
+          <a class="btn btn-ghost" href="#faq">Preguntas frecuentes</a>
+        </div>
+        <p class="disclaimer">Hoy optimizado para Premiere. Próximamente: más plataformas.</p>
+        <small class="muted">Garantía 7 días: si no obtenés ≥10 clips publicables con tu primer video, reembolso 100% y te quedás con el sistema.</small>
+      </div>
+    </section>
+
+    <section id="faq" class="section">
+      <h2>Preguntas frecuentes</h2>
+      <div class="accordion" id="acc">
+        <div class="acc-item">
+          <div class="acc-head">¿Cuánto tarda en generar los cortes?<span class="acc-icon">▾</span></div>
+          <div class="acc-body"><p>El tiempo típico es 15 minutos o menos desde la transcripción hasta tener los cortes listos para importar. Luego hacés el pulido final en Premiere.</p></div>
+        </div>
+        <div class="acc-item">
+          <div class="acc-head">¿Necesito ser editor experto?<span class="acc-icon">▾</span></div>
+          <div class="acc-body"><p>No. El sistema reduce la selección y segmentación. Aun así, un toque manual mejora títulos, ritmo y subtítulos.</p></div>
+        </div>
+        <div class="acc-item">
+          <div class="acc-head">¿Funciona con otros editores?<span class="acc-icon">▾</span></div>
+          <div class="acc-body"><p>Hoy está optimizado para Premiere. Estamos evaluando ampliar compatibilidad.</p></div>
+        </div>
+        <div class="acc-item">
+          <div class="acc-head">¿Puedo usarlo para terceros?<span class="acc-icon">▾</span></div>
+          <div class="acc-body"><p>Sí. Muchos creadores venden el servicio de “clipeo” a US$13 por short como referencia.</p></div>
+        </div>
+        <div class="acc-item">
+          <div class="acc-head">¿Qué necesito para empezar?<span class="acc-icon">▾</span></div>
+          <div class="acc-body"><p>Un video de 10–45 minutos y su transcripción/SRT. Después seguís la guía rápida incluida.</p></div>
+        </div>
+        <div class="acc-item">
+          <div class="acc-head">¿Y los derechos de autor?<span class="acc-icon">▾</span></div>
+          <div class="acc-body"><p>Usá material propio o con permisos. El usuario es responsable del contenido que procesa y publica.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div>© <span id="y"></span> PromptoShorts™ · Todos los derechos reservados</div>
+      <div class="muted">Hecho con enfoque en simplicidad y resultados.</div>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+    // Accordion solo uno abierto
+    const acc = document.getElementById('acc');
+    const items = Array.from(acc.querySelectorAll('.acc-item'));
+    items.forEach(item => {
+      item.querySelector('.acc-head').addEventListener('click', () => {
+        const isOpen = item.classList.contains('open');
+        items.forEach(i => i.classList.remove('open'));
+        if(!isOpen){ item.classList.add('open'); }
+      });
+    });
+  </script>
+</body>
+</html>
